@@ -14,10 +14,14 @@ const videoSchema = new mongoose.Schema(
       trim: true,
     },
     author: {
+      type: String,
+      default: "",
+    },
+    user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User", // relation to User model
       required: true,
-    },  
+    },
     url: {
       type: String, // path or URL to the .m3u8 playlist
       required: true,

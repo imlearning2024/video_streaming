@@ -10,11 +10,12 @@ import connectDb from "./src/db/db.js";
 const app = express();
 app.use(
   cors({
-    origin: "http://localhost:5173", // allow Vite dev server
-    credentials: true, // if you send cookies
+    origin: "http://localhost:5173",
+
+    credentials: true,
   })
 );
-app.use(express.urlencoded({extended:true}));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 const __root_dir = process.cwd();

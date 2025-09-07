@@ -1,41 +1,36 @@
 import User from "../src/models/user.model.js";
 import { asyncHandler } from "../src/utils/asyncHandler.js";
-import { verifyJWT } from "../src/utils/JWT.js";
+import jwt from "jsonwebtoken";
 
 const authentication = asyncHandler(async (req, res, next) => {
-  const authHeader = req.headers["authorization"];
-  console.log(authHeader.split(" ")[1]);
-  //
-  // if (!authHeader || !authHeader.startsWith("Bearer ")) {
-  //   return res.status(401).json({
-  //     success: false,
-  //     message: "Authentication failed: No or invalid token provided",
-  //   });
-  // }
-  //
-  // const jwt_token = authHeader.split(" ")[1];
-  //
-  // let decoded;
-  // try {
-  //   decoded = verifyJWT(jwt_token); // should return payload with user _id
-  // } catch (err) {
-  //   return res.status(401).json({
-  //     success: false,
-  //     message: "Invalid or expired token",
-  //   }); }
-  //
-  // const user = await User.findById(decoded._id);
-  // if (!user) {
-  //   return res.status(401).json({
-  //     success: false,
-  //     message: "User not found or invalid token",
-  //   });
-  // }
-  //
-  // req.user = user;
+    console.log(req.body)
+    const authHeader = req.headers["authorization"];
+    if (!authHeader) {
+        res.json({
+            success: false,
+            message: "Auth header is empty or not provided",
+        });
+    }
+    const acessToken = authHeader.split(" ")[1];
+    // console.log(acessToken);
+    if (!acessToken) {
+        res.json({ success: false, message: "token not provided" });
+    }
 
-  // console.log(req)
-  // next();
+    try {
+        const decodedToken = jwt.verify(acessToken, process.env.JWT_SECRET);
+        const _id = decodedToken.id;
+        console.log(_id);
+        req.user = _id;
+        console.log("from auth", _id);
+        next();
+    } catch (error) {
+        console.log("JWT-ERROR", error.name);
+        res.json({
+            success: false,
+            message: error.name || "error while decoding token",
+        });
+    }
 });
 
 export default authentication;

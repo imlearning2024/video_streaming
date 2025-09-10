@@ -16,8 +16,13 @@ const refreshAccessTokenMiddleWare = asyncHandler(async (req, res, next) => {
       refreshToken,
       process.env.JWT_REFRESH_SECRET
     );
+        console.log(decodedToken)
 
-    const dbRefreshToken = await Token.findOne({ user: decodedToken.id });
+        console.log("decodedToken",decodedToken.id);
+    // const dbRefreshToken = await Token.findOne({ user: decodedToken.id });
+    const dbRefreshToken = await Token.findOne({ user:decodedToken.id});
+        console.log("dbref",dbRefreshToken);
+        console.log("ref",refreshToken);
 
     if (!dbRefreshToken) {
       res.json({
